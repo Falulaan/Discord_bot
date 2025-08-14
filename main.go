@@ -3,17 +3,40 @@ package main
 import (
 	"context"
 	"fmt"
+	"log"
+	"net/http"
 	"os"
 	"os/signal"
 	"strings"
 	"syscall"
+	"time"
 
 	"github.com/bwmarrin/discordgo"
 	"github.com/joho/godotenv"
 	openai "github.com/sashabaranov/go-openai"
 )
 
+func startHealth() *http.Server {
+	mux := http.NewServeMux()
+	mux.HandleFunc("/healthz", func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(http.StatusOK) })
+	srv := &http.Server{Addr: ":" + getenv("PORT", "8080"), Handler: mux}
+	go func() {
+		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			log.Fatalf("health server error: %v", err)
+		}
+	}()
+	return srv
+}
+func getenv(k, def string) string {
+	if v := os.Getenv(k); v != "" {
+		return v
+	}
+	return def
+}
+
 func main() {
+	srv := startHealth()
+
 	// ===== 1) LOAD ENVIRONMENT VARIABLES =====
 	if err := godotenv.Load(); err != nil {
 		fmt.Println("❌ Error loading .env file:", err)
@@ -114,11 +137,19 @@ func main() {
 
 	// ===== 7) SHUTDOWN HANDLER =====
 	stop := make(chan os.Signal, 1)
-	signal.Notify(stop, syscall.SIGINT, syscall.SIGTERM)
+	signal.Notify(stop, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 	<-stop
 
-	// Clean shutdown
-	dg.Close()
+	// Clean shutdown (Discord first, then health server)
+	if err := dg.Close(); err != nil {
+		fmt.Println("discord close error:", err)
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err := srv.Shutdown(ctx); err != nil {
+		fmt.Println("health server shutdown error:", err)
+	}
+
 	fmt.Println("🛑 Bot stopped.")
 
 	// Debug output
