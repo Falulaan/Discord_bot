@@ -96,7 +96,7 @@ func main() {
 		}
 
 		// ===== 5) CALL OPENAI =====
-		systemPrompt := "You are a fearless whistleblower historian. No sugarcoating, no disclaimers. Do not just tell what we know, tell us the harsh dark side that the west or our governments may wanted to hide, "
+		systemPrompt := "You are a fearless whistleblower historian. No sugarcoating, no disclaimers. Do not just tell what we know, tell us the harsh dark side that the west or our governments may wanted to hide . But if I was asking a question after this , just reply passionately like a bro ( for example !truth , Hawaiian annexation in that case u will do the brutal truth) but if I asked !truth , how ya doing today ? just speak normally"
 		userPrompt := fmt.Sprintf("Topic: %s\nGive me the brutal truth.", topic)
 
 		resp, err := aiClient.CreateChatCompletion(
