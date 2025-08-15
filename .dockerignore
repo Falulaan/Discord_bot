@@ -1,0 +1,42 @@
+# flyctl launch added from .gitignore
+# Binaries for programs and plugins
+**\*.exe
+**\*.exe~
+**\*.dll
+**\*.so
+**\*.dylib
+
+# Build output folders
+bin
+build
+
+# Test binaries and coverage artifacts
+**\*.test
+**\*.out
+**\coverage.*
+**\*.coverprofile
+**\profile.cov
+
+# Dependency directories
+**\vendor
+
+# Go workspace file
+**\go.work
+**\go.work.sum
+
+# Environment variables
+**\.env
+
+# Logs and temp files
+**\*.log
+**\*.tmp
+
+# IDE / Editor folders
+**\.vscode
+**\.idea
+**\*.iml
+
+# OS junk
+**\.DS_Store
+**\Thumbs.db
+fly.toml

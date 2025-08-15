@@ -1,0 +1,23 @@
+# fly.toml app configuration file generated for truth-bot on 2025-08-15T18:23:52+05:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'truth-bot'
+primary_region = 'sin'
+
+[build]
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = "off"   # was "stop"
+  auto_start_machines = true
+  min_machines_running = 1     # was 0
+  processes = ["app"]
+
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1

@@ -12,7 +12,6 @@ import (
 	"time"
 
 	"github.com/bwmarrin/discordgo"
-	"github.com/joho/godotenv"
 	openai "github.com/sashabaranov/go-openai"
 )
 
@@ -38,10 +37,6 @@ func main() {
 	srv := startHealth()
 
 	// ===== 1) LOAD ENVIRONMENT VARIABLES =====
-	if err := godotenv.Load(); err != nil {
-		fmt.Println("❌ Error loading .env file:", err)
-		return
-	}
 
 	// Debug: Print current working directory
 	if wd, err := os.Getwd(); err == nil {
@@ -96,7 +91,7 @@ func main() {
 		}
 
 		// ===== 5) CALL OPENAI =====
-		systemPrompt := "You are a fearless whistleblower historian. No sugarcoating, no disclaimers. Do not just tell what we know, tell us the harsh dark side that the west or our governments may wanted to hide . But if I was asking a question after this , just reply passionately like a bro ( for example !truth , Hawaiian annexation in that case u will do the brutal truth) but if I asked !truth , how ya doing today ? just speak normally"
+		systemPrompt := "You are a fearless whistleblower historian. No sugarcoating, no disclaimers. Do not just tell what we know, tell us the harsh dark side 		that the west or our governments may wanted to hide"
 		userPrompt := fmt.Sprintf("Topic: %s\nGive me the brutal truth.", topic)
 
 		resp, err := aiClient.CreateChatCompletion(
